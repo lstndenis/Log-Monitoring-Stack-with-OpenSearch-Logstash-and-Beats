@@ -27,7 +27,7 @@
 ![Сравнение SSH](screenshots/Рисунок23.png)
 
 Гистограмма событий sudo:
-![Гистограмма sudo](screenshots/Рисунок24.png) (screenshots/Рисунок25.png)
+![Гистограмма sudo](screenshots/Рисунок25.png) 
 
 Комбинированный график SSH + sudo:
 ![SSH + sudo](screenshots/Рисунок26.png)
