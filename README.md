@@ -13,8 +13,8 @@
 * Linux VM2 (Syslog) -> Linux VM1 (Logstash (port 5514))
 
 Требования
-- Docker и Docker Compose (установлены на первой ВМ с Linux).
-- Linux ВМ2 (Ubuntu 20.04+) для отправки syslog и Filebeat.
+- Docker и Docker Compose (установлены обоих ВМ с Linux).
+- Linux ВМ2 (Ubuntu 22.04+) для отправки syslog и Filebeat.
 - Хостовая Windows (для Winlogbeat).
 - Открытые порты на первой ВМ: 9200, 5601, 5044, 5514 (TCP/UDP).
 
