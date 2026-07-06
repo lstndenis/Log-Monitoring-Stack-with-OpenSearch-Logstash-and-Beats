@@ -1,3 +1,7 @@
+![Docker](https://img.shields.io/badge/Docker-25.0-blue)
+![OpenSearch](https://img.shields.io/badge/OpenSearch-2.19.0-green)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+
 ## Log-Monitoring-Stack-with-OpenSearch-Logstash-and-Beats
 
 Это тестовый проект, демонстрирующий:
