@@ -1,6 +1,6 @@
 # Log-Monitoring-Stack-with-OpenSearch-Logstash-and-Beats
 
-Это учебный/тестовый проект, демонстрирующий:
+Это тестовый проект, демонстрирующий:
 
 - Развертывание OpenSearch + Dashboards + Logstash через Docker Compose.
 
