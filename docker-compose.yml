@@ -1,0 +1,82 @@
+
+services:
+
+  opensearch:
+    healthcheck:
+      test: ["CMD", "curl", "-k", "https://localhost:9200"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: always
+    image: opensearchproject/opensearch:2.19.0
+    container_name: opensearch
+    environment:
+      - discovery.type=single-node
+      - plugins.security.disabled=false
+      - OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g
+      - bootstrap.memory_lock=false
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=Admin123!Strong
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: 1
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data
+    networks:
+      - elknet
+    
+
+  dashboards:
+    image: opensearchproject/opensearch-dashboards:2.19.0
+    container_name: dashboards
+    environment:
+      - OPENSEARCH_HOSTS=["https://opensearch:9200"]
+      - OPENSEARCH_USERNAME=admin
+      - OPENSEARCH_PASSWORD=Admin123!Strong
+      - OPENSEARCH_SSL_VERIFICATIONMODE=none
+      - OPENSEARCH_SECURITY_MULTITENANCY_ENABLED=false
+    ports:
+      - "5601:5601"
+    depends_on:
+      - opensearch
+    volumes:
+      - dashboards-data:/usr/share/opensearch-dashboards/data
+    networks:
+      - elknet
+
+  logstash:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.logstash   
+    container_name: logstash
+    environment:
+      - LS_JAVA_OPTS=-Xms1g -Xmx1g
+      - XPACK_MONITORING_ENABLED=false   
+    ports:
+      - "5044:5044"
+      - "5140:5140/udp"
+      - "5514:5514/udp"
+      - "5514:5514/tcp"
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+    depends_on:
+      - opensearch
+    networks:
+      - elknet
+
+networks:
+  elknet:
+    driver: bridge
+    
+volumes:
+  dashboards-data:
+  opensearch-data:

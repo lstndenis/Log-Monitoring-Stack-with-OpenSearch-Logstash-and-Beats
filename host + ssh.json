@@ -1,0 +1,154 @@
+{
+   "name": "HOST + SSH VM2",
+   "type": "monitor",
+   "monitor_type": "query_level_monitor",
+   "enabled": true,
+   "schedule": {
+      "period": {
+         "unit": "MINUTES",
+         "interval": 5
+      }
+   },
+   "inputs": [
+      {
+         "search": {
+            "indices": [
+               "winlogbeat-2026.06.25",
+               "filebeat-2026.06.25"
+            ],
+            "query": {
+               "size": 0,
+               "query": {
+                  "range": {
+                     "@timestamp": {
+                        "from": "now-10m",
+                        "to": "now",
+                        "include_lower": true,
+                        "include_upper": true,
+                        "boost": 1
+                     }
+                  }
+               },
+               "aggregations": {
+                  "host_login": {
+                     "filter": {
+                        "term": {
+                           "event.action": {
+                              "value": "local_login",
+                              "boost": 1
+                           }
+                        }
+                     },
+                     "aggregations": {
+                        "unique_events": {
+                           "cardinality": {
+                              "field": "@timestamp"
+                           }
+                        }
+                     }
+                  },
+                  "ssh_from_host": {
+                     "filter": {
+                        "bool": {
+                           "filter": [
+                              {
+                                 "term": {
+                                    "event.action": {
+                                       "value": "ssh_login",
+                                       "boost": 1
+                                    }
+                                 }
+                              },
+                              {
+                                 "term": {
+                                    "source.ip": {
+                                       "value": "192.168.157.1",
+                                       "boost": 1
+                                    }
+                                 }
+                              }
+                           ],
+                           "adjust_pure_negative": true,
+                           "boost": 1
+                        }
+                     },
+                     "aggregations": {
+                        "unique_events": {
+                           "cardinality": {
+                              "field": "@timestamp"
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      }
+   ],
+   "triggers": [
+      {
+         "query_level_trigger": {
+            "id": "EB7r_Z4BGJDmLSjPFNMv",
+            "name": "Trigger",
+            "severity": "1",
+            "condition": {
+               "script": {
+                  "source": "ctx.results[0].aggregations.host_login.doc_count > 0 &&\nctx.results[0].aggregations.ssh_from_host.doc_count > 0",
+                  "lang": "painless"
+               }
+            },
+            "actions": [
+               {
+                  "id": "notification232547",
+                  "name": "Tg Alert",
+                  "destination_id": "Rh7K_Z4BGJDmLSjPgdB6",
+                  "message_template": {
+                     "source": "{\n  \"chat_id\": \"550144942\",\n  \"text\": \"Подозрение на lateral movement: вход на хост + SSH на ВМ2 (с IP хоста) за 5 минут\nХост-логинов: {{ctx.results.0.aggregations.host_login.doc_count}}\nSSH с хоста: {{ctx.results.0.aggregations.ssh_from_host.doc_count}}\nВремя: {{ctx.periodEnd}}\",\n  \"parse_mode\": \"HTML\"\n}",
+                     "lang": "mustache"
+                  },
+                  "throttle_enabled": false,
+                  "subject_template": {
+                     "source": "Alerting Notification action",
+                     "lang": "mustache"
+                  }
+               }
+            ]
+         }
+      }
+   ],
+   "ui_metadata": {
+      "schedule": {
+         "timezone": null,
+         "frequency": "interval",
+         "period": {
+            "unit": "MINUTES",
+            "interval": 5
+         },
+         "daily": 0,
+         "weekly": {
+            "tue": false,
+            "wed": false,
+            "thur": false,
+            "sat": false,
+            "fri": false,
+            "mon": false,
+            "sun": false
+         },
+         "monthly": {
+            "type": "day",
+            "day": 1
+         },
+         "cronExpression": "0 */1 * * *"
+      },
+      "monitor_type": "query_level_monitor",
+      "search": {
+         "searchType": "query",
+         "timeField": "",
+         "aggregations": [],
+         "groupBy": [],
+         "bucketValue": 1,
+         "bucketUnitOfTime": "h",
+         "filters": []
+      }
+   }
+}
