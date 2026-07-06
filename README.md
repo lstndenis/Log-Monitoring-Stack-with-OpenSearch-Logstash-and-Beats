@@ -8,9 +8,9 @@
 - Визуализация в OpenSearch Dashboards.
 
 Краткая схема:
-Windows (Winlogbeat) ──► Linux VM1 (Logstash (port 5044)) ──► Linux VM1 (OpenSearch (port 9200)) ◄── Linux VM1 (OpenSearch Dashboards (5601))
-Linux VM2 (Filebeat) ──► Linux VM1 (Logstash (port 5044))
-Linux VM2 (Syslog) ───► Linux VM1 (Logstash (port 5514))
+Windows (Winlogbeat) -> Linux VM1 (Logstash (port 5044)) -> Linux VM1 (OpenSearch (port 9200)) <- Linux VM1 (OpenSearch Dashboards (5601))
+Linux VM2 (Filebeat) -> Linux VM1 (Logstash (port 5044))
+Linux VM2 (Syslog) -> Linux VM1 (Logstash (port 5514))
 
 Требования
 - Docker и Docker Compose (установлены на первой ВМ с Linux).
