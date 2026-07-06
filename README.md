@@ -1,4 +1,4 @@
-# Log-Monitoring-Stack-with-OpenSearch-Logstash-and-Beats
+## Log-Monitoring-Stack-with-OpenSearch-Logstash-and-Beats
 
 Это тестовый проект, демонстрирующий:
 - Развертывание OpenSearch + Dashboards + Logstash через Docker Compose.
@@ -17,3 +17,17 @@
 - Linux ВМ2 (Ubuntu 20.04+) для отправки syslog и Filebeat.
 - Хостовая Windows (для Winlogbeat).
 - Открытые порты на первой ВМ: 9200, 5601, 5044, 5514 (TCP/UDP).
+
+## Визуализации и дашборды
+
+Гистограмма успешных SSH-входов по времени:
+![SSH успешные входы](screenshots/Рисунок22.png)
+
+Сравнение успешных и неудачных попыток SSH:
+![Сравнение SSH](screenshots/Рисунок23.png)
+
+Гистограмма событий sudo:
+![Гистограмма sudo](screenshots/Рисунок24.png) (screenshots/Рисунок25.png)
+
+Комбинированный график SSH + sudo:
+![SSH + sudo](screenshots/Рисунок26.png)
