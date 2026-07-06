@@ -1,0 +1,1 @@
+# Log-Monitoring-Stack-with-OpenSearch-Logstash-and-Beats
